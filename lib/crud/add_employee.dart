@@ -13,6 +13,7 @@ class _AddEmployeeState extends State<AddEmployee> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _designationController = TextEditingController();
   bool isFemale = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class _AddEmployeeState extends State<AddEmployee> {
             TextField(
               controller: _idController,
               keyboardType: TextInputType.number,
+              focusNode: _focusNode,
               decoration: const InputDecoration(
                 labelText: 'Employee Id',
                 hintText: 'Enter employee id',
@@ -74,7 +76,7 @@ class _AddEmployeeState extends State<AddEmployee> {
               height: 20.0,
             ),
             Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
@@ -132,23 +134,41 @@ class _AddEmployeeState extends State<AddEmployee> {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                // if (_idController.text.isNotEmpty &&
-                //     _nameController.text.isNotEmpty &&
-                //     _emailController.text.isNotEmpty &&
-                //     _designationController.text.isNotEmpty) {
-                //   Employee employee = Employee(
-                //       id: int.parse(_idController.text),
-                //       name: _nameController.text,
-                //       email: _emailController.text,
-                //       designation: _designationController.text);
-                //   EmployeeDatabase.instance.create(employee);
-                //   Navigator.pop(context);
-                // }
-              },
-              child: const Text('Add Employee'),
-            )
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              ElevatedButton(
+                onPressed: () {
+                  // if (_idController.text.isNotEmpty &&
+                  //     _nameController.text.isNotEmpty &&
+                  //     _emailController.text.isNotEmpty &&
+                  //     _designationController.text.isNotEmpty &&
+                  //     _idController.text.isNotEmpty) {
+                  //   Employee employee = Employee(
+                  //       id: int.parse(_idController.text),
+                  //       name: _nameController.text,
+                  //       email: _emailController.text,
+                  //       designation: _designationController.text);
+                  //   EmployeeDatabase.instance.create(employee);
+                  //   Navigator.pop(context);
+                  // }
+                },
+                child: const Text('Add Employee'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _idController.clear();
+                  _nameController.clear();
+                  _emailController.clear();
+                  _designationController.clear();
+                  isFemale = false;
+                  setState(() {
+                    _focusNode.requestFocus();
+                  });
+                },
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey),
+                child: const Text('Reset'),
+              )
+            ])
           ],
         ),
       )),
