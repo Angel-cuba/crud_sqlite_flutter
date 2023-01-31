@@ -16,29 +16,24 @@ class DbConnection {
   }
 
   //? variables
-  final String tableName = 'employee.db';
-  final String columnId = 'employeeId';
-  final String columnName = 'name';
-  final String columnEmail = 'email';
-  final String columnDesignation = 'designation';
-  final String columnIsMale = 'isMale';
+  static const String tableName = 'employees';
 
   //init database
   initializeDatabase() async {
     // Get path where database is stored
     Directory directory = await getApplicationDocumentsDirectory();
     // path to database
-    String path = '${directory.path}$tableName';
+    String path = '${directory.path}employees.db';
     // open database
     _database =
         await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute('''
+      return db.execute('''
         CREATE TABLE $tableName(
-          $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-          $columnName TEXT NOT NULL,
-          $columnEmail TEXT NOT NULL,
-          $columnDesignation TEXT NOT NULL,
-          $columnIsMale BOOLEAN NOT NULL
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          designation TEXT NOT NULL,
+          isMale BOOLEAN
         )
       ''');
     });
@@ -46,13 +41,11 @@ class DbConnection {
 
   //? CRUD operations
   //! Read
-  Future<List<Map<String, Object?>>> getEmployees() async {
-    List<Map<String, Object?>> result =
-        await _database.query(tableName, orderBy: columnName);
-    return result;
+  Future<List<Map<String, dynamic>>> getEmployees() async {
+    return await _database.query(tableName, orderBy: 'name');
   }
 
-  //! Insert
+  //! Insert5
   Future<int> insertEmployee(Employee employee) async {
     int result = await _database.insert(tableName, employee.toMap());
     return result;
@@ -61,14 +54,14 @@ class DbConnection {
   //! Update
   Future<int> updateEmployee(Employee employee) async {
     int result = await _database.update(tableName, employee.toMap(),
-        where: '$columnId = ?', whereArgs: [employee.id]);
+        where: 'id = ?', whereArgs: [employee.id]);
     return result;
   }
 
   //! Delete
   Future<int> deleteEmployee(int id) async {
-    int result = await _database
-        .delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+    int result =
+        await _database.delete(tableName, where: 'id = ?', whereArgs: [id]);
     return result;
   }
 

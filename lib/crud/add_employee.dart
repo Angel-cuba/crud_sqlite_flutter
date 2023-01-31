@@ -1,7 +1,11 @@
+import 'package:crud_sqlite/crud/employee.dart';
+import 'package:crud_sqlite/database/db.dart';
+import 'package:crud_sqlite/views/home.dart';
 import 'package:flutter/material.dart';
 
 class AddEmployee extends StatefulWidget {
-  const AddEmployee({super.key});
+  final DbConnection db;
+  const AddEmployee({super.key, required this.db});
 
   @override
   State<AddEmployee> createState() => _AddEmployeeState();
@@ -136,20 +140,44 @@ class _AddEmployeeState extends State<AddEmployee> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               ElevatedButton(
-                onPressed: () {
-                  // if (_idController.text.isNotEmpty &&
-                  //     _nameController.text.isNotEmpty &&
-                  //     _emailController.text.isNotEmpty &&
-                  //     _designationController.text.isNotEmpty &&
-                  //     _idController.text.isNotEmpty) {
-                  //   Employee employee = Employee(
-                  //       id: int.parse(_idController.text),
-                  //       name: _nameController.text,
-                  //       email: _emailController.text,
-                  //       designation: _designationController.text);
-                  //   EmployeeDatabase.instance.create(employee);
-                  //   Navigator.pop(context);
-                  // }
+                onPressed: () async {
+                  if (_idController.text.isNotEmpty &&
+                      _nameController.text.isNotEmpty &&
+                      _emailController.text.isNotEmpty &&
+                      _designationController.text.isNotEmpty &&
+                      _idController.text.isNotEmpty) {
+                    Employee employee = Employee(
+                        id: int.parse(_idController.text),
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        designation: _designationController.text,
+                        isMale: !isFemale);
+                    await widget.db.insertEmployee(employee);
+
+                    if (mounted) {
+                      setState(() {
+                        _idController.clear();
+                        _nameController.clear();
+                        _emailController.clear();
+                        _designationController.clear();
+                        isFemale = !isFemale;
+                        _focusNode.requestFocus();
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Employee added successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MyHomePage(title: 'Home Page')),
+                        (Route<dynamic> route) => false,
+                      );
+                    }
+                  }
                 },
                 child: const Text('Add Employee'),
               ),

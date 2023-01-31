@@ -1,4 +1,4 @@
-Employee toEmployee(Map<String, Object?> map) => Employee.fromMap(map);
+Employee toEmployee(Map<String, Object?> map) => Employee.toEmp(map);
 
 class Employee {
   final int id;
@@ -16,22 +16,20 @@ class Employee {
   });
 
   // Convert a Employee object into a Map object
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'designation': designation,
-      'isMale': isMale,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'email': email,
+        'designation': designation,
+        'isMale': isMale,
+      };
 
   // Convert a Map object into a Employee object
-  factory Employee.fromMap(Map<String, dynamic> map) => Employee(
+  factory Employee.toEmp(Map<String, dynamic> map) => Employee(
         id: map['id'],
         name: map['name'],
         email: map['email'],
         designation: map['designation'],
-        isMale: map['isMale'],
+        isMale: map['isMale'] == 1,
       );
 }
