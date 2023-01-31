@@ -96,8 +96,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => EditEmployee(
-                                                employee: employees[index])));
+                                          builder: (context) => EditEmployee(
+                                              employee: employees[index],
+                                              db: db),
+                                        ));
                                   },
                                 ),
                                 IconButton(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../database/db.dart';
+import '../views/home.dart';
 import 'employee.dart';
 
 class EditEmployee extends StatefulWidget {
-  const EditEmployee({super.key, required this.employee});
+  const EditEmployee({super.key, required this.employee, required this.db});
+  final DbConnection db;
   final Employee employee;
 
   @override
@@ -92,82 +95,89 @@ class _EditEmployeeState extends State<EditEmployee> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.male,
-                          size: isFemale ? 25 : 30.0,
-                          color: isFemale ? Colors.grey : Colors.blue,
-                        ),
-                        Text(
-                          'Male',
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: isFemale
-                                  ? FontWeight.normal
-                                  : FontWeight.bold,
-                              color: isFemale ? Colors.grey : Colors.blue),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
-                    Switch(
-                        value: isFemale,
-                        onChanged: (newValue) {
-                          setState(() {
-                            isFemale = newValue;
-                          });
-                        }),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.female,
-                            size: !isFemale ? 25.0 : 30.0,
-                            color: isFemale ? Colors.pink : Colors.grey),
-                        Text(
-                          'Female',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: isFemale
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: isFemale ? Colors.pink : Colors.grey),
-                        )
-                      ],
-                    )
+                    !isFemale
+                        ? Row(
+                            children: const [
+                              Icon(
+                                Icons.male,
+                                size: 30.0,
+                                color: Colors.blue,
+                              ),
+                              Text(
+                                'Male',
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: const [
+                              Icon(Icons.female,
+                                  size: 30.0, color: Colors.pinkAccent),
+                              Text(
+                                'Female',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.pink),
+                              )
+                            ],
+                          )
                   ],
                 ),
               ],
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               ElevatedButton(
-                onPressed: () {
-                  // if (_idController.text.isNotEmpty &&
-                  //     _nameController.text.isNotEmpty &&
-                  //     _emailController.text.isNotEmpty &&
-                  //     _designationController.text.isNotEmpty &&
-                  //     _idController.text.isNotEmpty) {
-                  //   Employee employee = Employee(
-                  //       id: int.parse(_idController.text),
-                  //       name: _nameController.text,
-                  //       email: _emailController.text,
-                  //       designation: _designationController.text);
-                  //   EmployeeDatabase.instance.create(employee);
-                  //   Navigator.pop(context);
-                  // }
+                onPressed: () async {
+                  if (_idController.text.isNotEmpty &&
+                      _nameController.text.isNotEmpty &&
+                      _emailController.text.isNotEmpty &&
+                      _designationController.text.isNotEmpty &&
+                      isFemale) {
+                    Employee employee = Employee(
+                        id: int.parse(_idController.text),
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        designation: _designationController.text,
+                        isMale: !isFemale);
+                    await widget.db.updateEmployee(employee);
+
+                    if (mounted) {
+                      setState(() {
+                        _idController.clear();
+                        _nameController.clear();
+                        _emailController.clear();
+                        _designationController.clear();
+                        isFemale = !isFemale;
+                        _focusNode.requestFocus();
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.lightGreenAccent,
+                          content: Text('Employee added successfully'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MyHomePage(title: 'Home Page')),
+                        (Route<dynamic> route) => false,
+                      );
+                    }
+                  }
                 },
                 child: const Text('Update Employee'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  _idController.clear();
-                  _nameController.clear();
-                  _emailController.clear();
-                  _designationController.clear();
+                  _nameController.text = '';
+                  _emailController.text = '';
+                  _designationController.text = '';
                   isFemale = false;
                   setState(() {
                     _focusNode.requestFocus();
