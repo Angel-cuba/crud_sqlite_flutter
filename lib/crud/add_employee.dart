@@ -165,6 +165,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
+                          backgroundColor: Colors.lightGreenAccent,
                           content: Text('Employee added successfully'),
                           duration: Duration(seconds: 2),
                         ),

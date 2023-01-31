@@ -104,9 +104,29 @@ class _MyHomePageState extends State<MyHomePage> {
                                   icon: const Icon(Icons.delete),
                                   color: Colors.redAccent.shade700,
                                   onPressed: () {
-                                    setState(() {
-                                      employees.removeAt(index);
-                                    });
+                                    String name = employees[index].name;
+                                    db.deleteEmployee(employees[index].id);
+                                    // setState(() {
+                                    //   employees.removeAt(index);
+                                    // });
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor:
+                                              Colors.redAccent.shade400,
+                                          content: Text('$name deleted'),
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                      );
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MyHomePage(
+                                                    title: 'Employee List',
+                                                  )));
+                                    }
                                   },
                                 ),
                               ],
