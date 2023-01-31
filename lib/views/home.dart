@@ -5,8 +5,7 @@ import 'package:crud_sqlite/database/db.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -44,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Employee List ($count)'),
       ),
       body: isLoading
           ? const Center(
@@ -81,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 : Icons.female),
                           ),
                           title: Text(
-                            '${employees[index].name} |  ${employees[index].designation}(Id: ${employees[index].id.toString()}))',
+                            '${employees[index].name} |  ${employees[index].designation.toUpperCase()}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(employees[index].email),
@@ -125,9 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const MyHomePage(
-                                                    title: 'Employee List',
-                                                  )));
+                                                  const MyHomePage()));
                                     }
                                   },
                                 ),

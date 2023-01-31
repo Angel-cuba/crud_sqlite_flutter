@@ -173,8 +173,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const MyHomePage(title: 'Home Page')),
+                            builder: (context) => const MyHomePage()),
                         (Route<dynamic> route) => false,
                       );
                     }
