@@ -1,4 +1,5 @@
 import 'package:crud_sqlite/crud/add_employee.dart';
+import 'package:crud_sqlite/crud/edit_emplyee.dart';
 import 'package:crud_sqlite/crud/employee.dart';
 import 'package:flutter/material.dart';
 
@@ -51,18 +52,49 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
-                    title: Text(employees[index].name),
-                    subtitle: Text(employees[index].email),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AddEmployee()));
-                      },
-                    ),
-                  ),
+                      leading: CircleAvatar(
+                        foregroundColor: employees[index].isMale
+                            ? Colors.blueAccent.shade700
+                            : Colors.redAccent.shade700,
+                        backgroundColor: employees[index].isMale
+                            ? Colors.blueAccent.shade100
+                            : Colors.redAccent.shade100,
+                        child: Icon(employees[index].isMale
+                            ? Icons.male
+                            : Icons.female),
+                      ),
+                      title: Text(
+                        '${employees[index].name} |  ${employees[index].designation}(Id: ${employees[index].id.toString()}))',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(employees[index].email),
+                      trailing: SizedBox(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              color: Colors.greenAccent.shade700,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditEmployee(
+                                            employee: employees[index])));
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              color: Colors.redAccent.shade700,
+                              onPressed: () {
+                                setState(() {
+                                  employees.removeAt(index);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      )),
                 );
               },
             ),
