@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'employee.dart';
 
 class EditEmployee extends StatefulWidget {
-  const EditEmployee({super.key});
+  const EditEmployee({super.key, required this.employee});
+  final Employee employee;
 
   @override
   State<EditEmployee> createState() => _EditEmployeeState();
@@ -17,6 +19,12 @@ class _EditEmployeeState extends State<EditEmployee> {
 
   @override
   Widget build(BuildContext context) {
+    _idController.text = widget.employee.id.toString();
+    _nameController.text = widget.employee.name;
+    _emailController.text = widget.employee.email;
+    _designationController.text = widget.employee.designation;
+    isFemale = !widget.employee.isMale;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Employee'),
